@@ -48,8 +48,6 @@ import {
 import { securityMiddleware } from './middleware/securityHeaders.js';
 import { sanitizeInputs } from './middleware/sanitize.js';
 
-dotenv.config();
-
 const app = express();
 const PORT = getConfig().server.port;
 
