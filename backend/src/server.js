@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger.js';
 import stellarRoutes from './routes/stellar.js';
+import assetsRoutes from './routes/assets.js';
 import { initWebSocket } from './services/websocket.js';
 import eventsRoutes from './routes/events.js';
 import securityRoutes from './routes/security.js';
@@ -41,6 +42,7 @@ await auditLogger.initialize();
 // Swagger Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/stellar', stellarRoutes);
+app.use('/api/assets', assetsRoutes);
 app.use('/api/events', eventsRoutes);
 app.use('/api/security', securityRoutes);
 app.use('/api/load-testing', loadTestingRoutes);
