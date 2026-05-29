@@ -6,6 +6,7 @@ import { signAccessToken, signRefreshToken, verifyToken } from '../auth/tokens.j
 import { requireAuth } from '../middleware/auth.js';
 import { consumePendingCredentials } from '../recovery/recoveryStore.js';
 import { createRateLimiter } from '../middleware/rateLimiter.js';
+import { csrfTokenEndpoint } from '../middleware/csrf.js';
 
 const router = express.Router();
 
@@ -232,5 +233,24 @@ router.get('/profile', requireAuth, (req, res) => {
   if (!user) return res.status(404).json({ error: 'User not found' });
   res.json({ id: user.id, username: user.username, createdAt: user.createdAt });
 });
+
+/**
+ * @swagger
+ * /api/auth/csrf-token:
+ *   get:
+ *     summary: Get CSRF token for state-mutating requests
+ *     tags: [Auth]
+ *     security: []
+ *     responses:
+ *       200:
+ *         description: CSRF token issued
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 csrfToken: { type: string }
+ */
+router.get('/csrf-token', csrfTokenEndpoint);
 
 export default router;

@@ -47,8 +47,8 @@ import {
 } from './middleware/errorHandler.js';
 import { securityMiddleware } from './middleware/securityHeaders.js';
 import { sanitizeInputs } from './middleware/sanitize.js';
-
-dotenv.config();
+import { csrfTokenMiddleware, validateCSRFMiddleware, csrfTokenEndpoint } from './middleware/csrf.js';
+import dotenv from 'dotenv';
 
 const logger = {
   info: (event, data) => console.log(`[${event}]`, data),
@@ -68,8 +68,9 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
       cb(null, false);
     },
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],
+    credentials: true
   })
 );
 
@@ -84,6 +85,10 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: false, limit: '10mb' }));
 app.use(requestIdMiddleware);
 app.use(requestLogger);
+
+// CSRF protection
+app.use(csrfTokenMiddleware);
+app.use(validateCSRFMiddleware);
 
 // Rate limiting
 app.use(createRateLimiter());
