@@ -1,8 +1,6 @@
 import rateLimit from 'express-rate-limit';
 import { isWhitelisted } from '../security/ipWhitelist.js';
-import { logger } from '../utils/logger.js';
-
-export const rateLimitLogger = logger.child({ component: 'rateLimiter' });
+import logger from '../config/logger.js';
 
 function getClientIP(req) {
   const forwarded = req.headers['x-forwarded-for'];
@@ -36,6 +34,7 @@ function createRateLimiter(options = {}) {
     keyGenerator: (req) => getClientIP(req),
     handler: (req, res, next, options) => {
       const clientIP = getClientIP(req);
+      logger.warn({
       const username = req.body?.username || 'unknown';
       
       // Log rate-limit hits with username (not password)
