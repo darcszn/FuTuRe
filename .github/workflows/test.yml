@@ -21,6 +21,9 @@ jobs:
 
     - run: npm install
 
+    - name: Audit dependencies for vulnerabilities
+      run: npm audit --audit-level=high
+
     - name: Run tests with coverage
       run: npm run test:coverage
 
